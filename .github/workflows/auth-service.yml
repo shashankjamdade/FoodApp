@@ -23,8 +23,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      # 👇 Build and install common-libs first
+      - name: Build common-libs
+        run: mvn -B clean install -pl common-libs -am -DskipTests
+
+      # 👇 Now build auth-service (it will pick up common-libs from local repo)
       - name: Build Auth Service JAR
-        run: mvn -pl auth-service clean package -DskipTests
+        run: mvn -B clean package -pl auth-service -am -DskipTests
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
