@@ -6,7 +6,7 @@ on:
       - "auth-service/**"
       - ".github/workflows/auth-service.yml"
     branches:
-      - main
+      - master
 
 jobs:
   build-and-deploy:

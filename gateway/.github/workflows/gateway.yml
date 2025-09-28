@@ -6,7 +6,7 @@ on:
       - "gateway/**"
       - ".github/workflows/gateway.yml"
     branches:
-      - main
+      - master
 
 jobs:
   build-and-deploy:
