@@ -3,8 +3,9 @@ name: Deploy Gateway
 on:
   push:
     paths:
-      - "gateway/**"
-      - ".github/workflows/gateway.yml"
+      - 'common-libs/**'
+      - 'gateway/**'
+      - '.github/workflows/gateway.yml'
     branches:
       - master
 

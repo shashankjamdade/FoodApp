@@ -3,8 +3,9 @@ name: Deploy Auth Service
 on:
   push:
     paths:
-      - "auth-service/**"
-      - ".github/workflows/auth-service.yml"
+      - 'common-libs/**'
+      - 'auth-service/**'
+      - '.github/workflows/auth-service.yml'
     branches:
       - master
 
