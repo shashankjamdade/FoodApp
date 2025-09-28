@@ -23,13 +23,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # 👇 Build and install common-libs first
-      - name: Build common-libs
-        run: mvn -B clean install -pl common-libs -am -DskipTests
-
-      # 👇 Now build auth-service (it will pick up common-libs from local repo)
-      - name: Build Auth Service JAR
-        run: mvn -B clean package -pl auth-service -am -DskipTests
+      - name: Build JAR (common-libs + auth-service)
+        run: mvn -pl common-libs,auth-service -am clean package -DskipTests
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -38,20 +33,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t jshashank388/foodappauthservice:latest ./auth-service
+        run: docker build -t jshashank388/foodappauthservice:latest -f auth-service/Dockerfile .
 
       - name: Push Docker image
         run: docker push jshashank388/foodappauthservice:latest
 
-      # 8. Deploy to Railway using CLI Docker image
       - name: Install Railway CLI
-        run: |
-          curl -sSL https://railway.app/install.sh | sh
+        run: curl -sSL https://railway.app/install.sh | sh
 
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-        run: |
-          railway up --detach --service foodappauthservice
-
+        run: railway up --detach --service foodappauthservice

@@ -1,14 +1,8 @@
-# Stage 1: Build
-FROM maven:3.9.9-eclipse-temurin-21 AS builder
+FROM eclipse-temurin:21-jdk AS runtime
 WORKDIR /app
-COPY pom.xml .
-COPY common-libs ./common-libs
-COPY gateway ./gateway
-RUN mvn -pl gateway -am clean package -DskipTests
 
-# Stage 2: Run
-FROM eclipse-temurin:21-jdk
-WORKDIR /app
-COPY --from=builder /app/gateway/target/gateway-*.jar app.jar
+# Copy only the service jar
+COPY gateway/target/gateway-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

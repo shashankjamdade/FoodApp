@@ -23,8 +23,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build Gateway JAR
-        run: mvn -pl gateway clean package -DskipTests
+      - name: Build JAR (common-libs + gateway)
+        run: mvn -pl common-libs,gateway -am clean package -DskipTests
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -33,19 +33,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t jshashank388/foodappgateway:latest ./gateway
+        run: docker build -t jshashank388/foodappgateway:latest -f gateway/Dockerfile .
 
       - name: Push Docker image
         run: docker push jshashank388/foodappgateway:latest
 
-      # 8. Deploy to Railway using CLI Docker image
       - name: Install Railway CLI
-        run: |
-          curl -sSL https://railway.app/install.sh | sh
+        run: curl -sSL https://railway.app/install.sh | sh
 
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-        run: |
-          railway up --detach --service foodappgateway
+        run: railway up --detach --service foodappgateway
