@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://turntable.proxy.rlwy.net:34196/railway?sslmode=require
+    username: postgres
+    password: SyZQoUqrnJaQGYjWivcETXjhJRxGNsDp
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: false
+    url: jdbc:postgresql://turntable.proxy.rlwy.net:34196/railway?sslmode=require
+    user: postgres
+    password: SyZQoUqrnJaQGYjWivcETXjhJRxGNsDp
+
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username: ${MAIL_USERNAME:43eda7f207166c}
+    password: ${MAIL_PASSWORD:41559368a211bc}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+app:
+  jwt:
+    secret: mysupersecurekeymysupersecurekey12    # replace with a strong random string
+  email:
+    otp:
+      expiry-minutes: 10

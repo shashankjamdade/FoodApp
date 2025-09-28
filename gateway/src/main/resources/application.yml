@@ -1,0 +1,15 @@
+server:
+  port: 8443
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: http://localhost:8080
+          predicates: [ Path=/auth/** ]
+        - id: user
+          uri: http://user-service:8082
+          predicates: [ Path=/users/** ]
+security:
+  jwt:
+    secret: ${JWT_SECRET:mysupersecurekeymysupersecurekey12}
