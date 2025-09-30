@@ -1,11 +1,13 @@
 package com.foodapp.auth.service
 
+import com.foodapp.auth.client.UserServiceClient
 import com.foodapp.auth.dto.*
 import com.foodapp.auth.entity.User
 import com.foodapp.auth.repository.UserRepository
 import com.foodapp.auth.validator.RequestValidator
+import com.foodapp.common.dto.CreateUserProfileRequest
+import com.foodapp.common.dto.UserProfileResponse
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 open class AuthService(
     private val userRepository: UserRepository,
     private val emailService: EmailService,
-    private val otpService: OtpService
+    private val otpService: OtpService,
+    private val userServiceClient: UserServiceClient
 ) {
     @Transactional
     open fun signup(request: SignupRequest): SignupResponse {
@@ -67,6 +70,24 @@ open class AuthService(
             user.verificationOtp = null
             user.otpExpiryTime = null
             userRepository.save(user)
+
+            // Create default profile in user-service
+            try {
+                userServiceClient.createProfile(
+                    CreateUserProfileRequest(
+                        authUserId = user.id!!,
+                        firstName = user.firstName,
+                        lastName = user.lastName,
+                        email = user.email,
+                        phone = "",  // Phone will be updated later
+                        role = user.role.name
+                    )
+                )
+            } catch (e: Exception) {
+                // Log error but don't fail the verification
+                println("Failed to create user profile: ${e.message}")
+            }
+
             return VerifyOtpResponse("Email verified successfully", true)
         }
 

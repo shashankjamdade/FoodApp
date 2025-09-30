@@ -37,3 +37,6 @@ app:
   email:
     otp:
       expiry-minutes: 10
+  services:
+    user:
+      url: http://localhost:8081  # User service URL

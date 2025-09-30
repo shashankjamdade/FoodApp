@@ -18,8 +18,8 @@ data class User(
     @Column(nullable = false)
     var firstName: String = "",
 
-    @Column(nullable = false)
-    var lastName: String = "",
+    @Column(nullable = true)
+    var lastName: String? = null,
 
     @NotNull
     @Column(nullable = false, unique = true)
@@ -39,5 +39,11 @@ data class User(
     var verificationOtp: String? = null,
 
     @Column
-    var otpExpiryTime: LocalDateTime? = null
+    var otpExpiryTime: LocalDateTime? = null,
+
+    @Column(nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(nullable = false)
+    var updatedAt: LocalDateTime = LocalDateTime.now()
 )

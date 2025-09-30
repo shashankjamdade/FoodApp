@@ -6,10 +6,12 @@ spring:
       routes:
         - id: auth
           uri: http://localhost:8080
-          predicates: [ Path=/auth/** ]
-        - id: user
-          uri: http://user-service:8082
-          predicates: [ Path=/users/** ]
+          predicates:
+            - Path=/auth/**
+        - id: user-profiles
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/profiles/**,/api/v1/auth-users/**,/api/v1/users/**
 security:
   jwt:
     secret: ${JWT_SECRET:mysupersecurekeymysupersecurekey12}

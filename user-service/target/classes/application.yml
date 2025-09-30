@@ -1,21 +1,37 @@
-server:
-  port: 8082
 spring:
   datasource:
-    url: ${PG_JDBC:jdbc:postgresql://postgres:5432/foodapp}
-    username: ${PG_USER:postgres}
-    password: ${PG_PASSWORD:postgres}
+    url: jdbc:postgresql://turntable.proxy.rlwy.net:34196/railway?sslmode=require
+    username: postgres
+    password: SyZQoUqrnJaQGYjWivcETXjhJRxGNsDp
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
-      hibernate.default_schema: core
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    schemas: core
-    default-schema: core
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
-security:
-  jwt:
-    secret: ${JWT_SECRET:change_me_ultra_secret}
+  flyway:
+    enabled: false
+    url: jdbc:postgresql://turntable.proxy.rlwy.net:34196/railway?sslmode=require
+    user: postgres
+    password: SyZQoUqrnJaQGYjWivcETXjhJRxGNsDp
+
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username: ${MAIL_USERNAME:43eda7f207166c}
+    password: ${MAIL_PASSWORD:41559368a211bc}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  otp:
+    expiration-minutes: 5

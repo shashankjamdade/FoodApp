@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class JwtFilterConfig {
+open class JwtFilterConfig {
     @Bean
-    fun jwtFilter(@Value("\${security.jwt.secret:change_me_ultra_secret}") secret: String)
+    open fun jwtFilter(@Value("\${security.jwt.secret:change_me_ultra_secret}") secret: String)
         : FilterRegistrationBean<SimpleJwtAuthFilter> {
         val reg = FilterRegistrationBean(SimpleJwtAuthFilter(secret))
         reg.addUrlPatterns("/users/*")
