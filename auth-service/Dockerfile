@@ -1,11 +1,19 @@
 # ---- Build stage ----
 FROM maven:3.9.8-eclipse-temurin-21 AS build
 WORKDIR /app
+
+# Copy parent + required POMs
 COPY pom.xml .
 COPY common-libs/pom.xml common-libs/
 COPY auth-service/pom.xml auth-service/
-RUN mvn -B dependency:go-offline
+
+# Fetch only auth-service + common-libs dependencies
+RUN mvn -pl auth-service -am dependency:go-offline
+
+# Copy full source
 COPY . .
+
+# Build auth-service only
 RUN mvn -pl auth-service -am clean package -DskipTests
 
 # ---- Runtime stage ----
