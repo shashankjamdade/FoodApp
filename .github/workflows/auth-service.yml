@@ -46,7 +46,7 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
         run: |
-          railway service redeploy --service foodappauthservice --image jshashank388/foodappauthservice:latest
+          railway service redeploy foodappauthservice --image jshashank388/foodappauthservice:latest
 
 #          railway up --service foodappauthservice --detach
 
