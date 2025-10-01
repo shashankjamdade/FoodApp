@@ -71,6 +71,7 @@
   </dependencies>
 
   <build>
+    <finalName>app</finalName>
     <sourceDirectory>src/main/kotlin</sourceDirectory> <!-- ✅ tells Maven -->
     <plugins>
       <!-- Kotlin (inherits executions from parent) -->
