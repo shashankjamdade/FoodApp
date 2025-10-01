@@ -20,8 +20,11 @@ RUN mvn -pl auth-service -am clean package -DskipTests
 FROM eclipse-temurin:21-jdk AS runtime
 WORKDIR /app
 
+# Copy only the service jar
+COPY auth-service/target/auth-service-0.0.1-SNAPSHOT.jar app.jar
 # Copy built jar from build stage
 COPY --from=build /app/auth-service/target/auth-service-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
