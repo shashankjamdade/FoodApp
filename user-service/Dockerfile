@@ -20,8 +20,8 @@ RUN mvn -pl user-service -am clean package -DskipTests
 FROM eclipse-temurin:21-jdk AS runtime
 WORKDIR /app
 
-# Copy the built jar from build stage
-COPY --from=build /app/user-service/target/user-service-0.0.1-SNAPSHOT.jar app.jar
+# Copy the built jar from build stage (flexible naming)
+COPY --from=build /app/user-service/target/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
