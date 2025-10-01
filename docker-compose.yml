@@ -1,32 +1,61 @@
 version: "3.9"
+
 services:
   postgres:
     image: postgres:15
+    container_name: foodapp-db
+    restart: always
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: foodapp
-    ports: ["5432:5432"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   auth-service:
-    build: ./auth-service
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    container_name: foodapp-auth
+    depends_on:
+      - postgres
     environment:
-      PG_JDBC: jdbc:postgresql://postgres:5432/foodapp
-      PG_USER: postgres
-      PG_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/foodapp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
       JWT_SECRET: change_me_ultra_secret
-    depends_on: [postgres]
-    ports: ["8081:8081"]
+    ports:
+      - "8081:8080"   # host 8081 → container 8080 (auth-service internal port)
+
   user-service:
-    build: ./user-service
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    container_name: foodapp-user
+    depends_on:
+      - postgres
     environment:
-      PG_JDBC: jdbc:postgresql://postgres:5432/foodapp
-      PG_USER: postgres
-      PG_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/foodapp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
       JWT_SECRET: change_me_ultra_secret
-    depends_on: [postgres]
-    ports: ["8082:8082"]
+    ports:
+      - "8082:8085"   # host 8082 → container 8085 (user-service internal port)
+
   gateway:
-    build: ./gateway
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: foodapp-gateway
+    depends_on:
+      - auth-service
+      - user-service
     environment:
       JWT_SECRET: change_me_ultra_secret
-    depends_on: [auth-service, user-service]
-    ports: ["8080:8080"]
+    ports:
+      - "8443:8443"   # host 8443 → container 8443 (gateway internal port)
+
+volumes:
+  postgres_data:
