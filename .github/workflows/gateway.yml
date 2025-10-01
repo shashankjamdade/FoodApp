@@ -45,5 +45,5 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-        run: railway service redeploy --service foodappgateway
+        run: railway up --detach --service foodappgateway
 #          railway up --detach --service foodappgateway
