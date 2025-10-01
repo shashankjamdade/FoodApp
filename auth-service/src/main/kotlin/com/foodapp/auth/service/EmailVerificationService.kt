@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 import kotlin.random.Random
 
 @Service
-class EmailVerificationService(
+open class EmailVerificationService(
     private val emailService: EmailService,
     private val userRepository: UserRepository,
     private val userServiceClient: UserServiceClient,
@@ -19,7 +19,7 @@ class EmailVerificationService(
     private val otpExpiryMinutes: Long
 ) {
     @Transactional
-    fun sendVerificationOtp(userId: Int, email: String) {
+    open fun sendVerificationOtp(userId: Int, email: String) {
         val otp = generateOtp()
         val user = userRepository.findById(userId).orElseThrow { NoSuchElementException("User not found") }
         user.verificationOtp = otp
